@@ -1,76 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ProductListManager
 {
-    public class ProductManager
+    
+        public class ProductManager
     {
+        ConsoleInput userInput = new ConsoleInput();
+
         public List<string> AddProducts()
         {
-            Console.WriteLine("Enter product names. \nType 'exit' to finish.\n");
+            //Console.WriteLine("Enter product names. \nType 'exit' to finish.\n");
             List<string> products = new List<string>();
             while (true)
 
             {
-                Console.Write("Product: ");
-                // If ReadLine() returns null, use "" instead; otherwise trim leading and trailing spaces.
-                string userInput = Console.ReadLine()?.Trim() ?? "";
+                string validInput = userInput.ReadNonEmpty("Product: ", "Product name can't be empty.");
 
-                if (string.IsNullOrWhiteSpace(userInput))
+                if (validInput.Equals("exit", StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Product name can't be empty");
-                    Console.ResetColor();
-                    continue;
-                }
-
-                if (userInput.ToLower() == "exit")
-                {
-                    
-                   break;
+                    break;
                 }
 
                 // The application should only accept product names in this format: LETTERS-NUMBER between 200 and 500
 
-                if (products.Contains(userInput))
+                if (products.Contains(validInput))
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WARNING: Product already exists.");
                     Console.ResetColor();
                     continue;
                 }
-                else if (Regex.IsMatch(userInput, @"^[A-Z]+-([2-4][0-9]{2}|500)$")) // Valid product name
+                else if (Regex.IsMatch(validInput, @"^[A-Z]+-([2-4][0-9]{2}|500)$")) // Valid product name
                 {
-                    products.Add(userInput);
+                    products.Add(validInput);
                     continue;
                 }
 
                 // Error handling: collect and show all product name format errors, not just the first one
                 List<string> errors = new List<string>();
 
-                if (!Regex.IsMatch(userInput, "-")) // No dash
+                if (!Regex.IsMatch(validInput, "-")) // No dash
                 {
                     errors.Add("Product must contain a dash (-).");
                 }
                 else
                 {
-                    if (Regex.IsMatch(userInput, @"^[^-]*[a-z]")) // Lowercase letter on the left side
+                    if (Regex.IsMatch(validInput, @"^[^-]*[a-z]")) // Lowercase letter on the left side
                     {
                         errors.Add("The left side must contain capitalized letters only.");
                     }
 
-                    if (!Regex.IsMatch(userInput, @"^[A-Za-z]+-")) // Non-letter on the left side
+                    if (!Regex.IsMatch(validInput, @"^[A-Za-z]+-")) // Non-letter on the left side
                     {
                         errors.Add("The left side must contain letters only.");
                     }
 
-                    if (!Regex.IsMatch(userInput, @"-[0-9]+$")) // Right side is not only digits
+                    if (!Regex.IsMatch(validInput, @"-[0-9]+$")) // Right side is not only digits
                     {
                         errors.Add("The right side must contain numbers only.");
                     }
-                    else if (!Regex.IsMatch(userInput, @"-([2-4][0-9]{2}|500)$")) // Number out of range
+                    else if (!Regex.IsMatch(validInput, @"-([2-4][0-9]{2}|500)$")) // Number out of range
                     {
                         errors.Add("The numeric part must be between 200 and 500.");
                     }
@@ -92,10 +85,45 @@ namespace ProductListManager
 
 
             }
-            
-                return products; 
-            
-            
+
+            return products;
+
+
         }
+
+        public void ViewProducts(List<string> products)
+        {
+            if (products.Count > 0)
+            {
+                products.Sort();//Sort the product list alphabetically before displaying it.        
+                Console.WriteLine($"\nProducts entered: \n");
+                foreach (string product in products)
+                { 
+                    Console.WriteLine($"- {product}"); 
+                }    
+                
+            } else
+            {
+                Console.WriteLine($"Your list is empty");
+            }
+        }
+
+        public void DeleteProduct(List<string> products, string productName)
+        {
+            // Remove() returns false if there is no such product in the list.
+            if (products.Remove(productName))
+            {
+                Console.WriteLine($"Product {productName} was removed successfully");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"WARNING: Product {productName} was not found.");
+                Console.ResetColor();
+            }
+        }
+      
     }
+
+    
 }

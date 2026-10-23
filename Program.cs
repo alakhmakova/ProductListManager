@@ -2,19 +2,55 @@
 
 using ProductListManager;
 
+List<string> products = new List<string>(); //create an empty list
 
 ProductManager manager = new ProductManager();
-List<string> userProducts = manager.AddProducts();
-userProducts.Sort();//Sort the product list alphabetically before displaying it.
+ConsoleInput userInput = new ConsoleInput();
+bool runMenu = true;
+while (runMenu)
+{ 
 
-if ( userProducts.Count > 0 )
+//Ask user to choose menu option 
+Console.WriteLine("\nSelect option 1-5. Type 0 to exit:\r\n\n1. Add Product\r\n2. View Products\r\n3. Search Product\r\n4. Delete Product\r\n5. Save products to the file\r\n0. Exit");
+string input = userInput.ReadNonEmpty("Select option: ", "Menu option can't be empty.");
+
+// Without this check, any non-number (e.g. "abc") would become 0 and close the program.
+if (!int.TryParse(input, out int option))
 {
-    Console.WriteLine($"\nProducts entered: \n");
-    foreach (string product in userProducts)
-    {
-        Console.WriteLine($"- {product}");
-    }
-} else { 
-    Console.WriteLine($"\nYour list is empty"); 
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("Menu option must be a number.");
+    Console.ResetColor();
+    continue;
 }
 
+
+    switch (option)
+    {
+        case 1:
+            Console.WriteLine("Enter product names. \nType 'exit' to finish.\n");
+            products = manager.AddProducts();
+            break;
+
+        case 2:
+            manager.ViewProducts(products);
+            break;
+
+        case 3:
+            Console.WriteLine($"Search Product");
+            break;
+        case 4:
+            string productName = userInput.ReadNonEmpty("Product to delete: ", "Product name can't be empty.");
+            manager.DeleteProduct(products, productName);
+            break;
+        case 5:
+            Console.WriteLine($"Save products to the file");
+            break;
+        case 0:
+            Console.WriteLine("Application closed.");
+            runMenu = false;
+        break;
+        default:
+            Console.WriteLine($"Wrong menu option.");
+            break;
+    }
+}

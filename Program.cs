@@ -37,7 +37,14 @@ List<string> AddProducts()
 
         // The application should only accept product names in this format: LETTERS-NUMBER between 200 and 500
 
-        if (Regex.IsMatch(userInput, @"^[A-Z]+-([2-4][0-9]{2}|500)$")) // Valid product name
+        if (products.Contains(userInput))
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("WARNING: Product already exists.");
+            Console.ResetColor();
+            continue;
+        }
+        else if (Regex.IsMatch(userInput, @"^[A-Z]+-([2-4][0-9]{2}|500)$")) // Valid product name
         {
             products.Add(userInput);
             continue;

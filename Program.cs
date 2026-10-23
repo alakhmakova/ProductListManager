@@ -2,8 +2,7 @@
 
 using ProductListManager;
 
-List<string> products = new List<string>(); //create an empty list
-
+List<string> products = new List<string>(); //create an empty list - продукты исчезают при повторном выборе 1
 ProductManager manager = new ProductManager();
 ConsoleInput userInput = new ConsoleInput();
 bool runMenu = true;
@@ -28,7 +27,7 @@ if (!int.TryParse(input, out int option))
     {
         case 1:
             Console.WriteLine("Enter product names. \nType 'exit' to finish.\n");
-            products = manager.AddProducts();
+            products = manager.AddProducts(products);
             break;
 
         case 2:
@@ -36,7 +35,8 @@ if (!int.TryParse(input, out int option))
             break;
 
         case 3:
-            Console.WriteLine($"Search Product");
+            string productNameOrNumber = userInput.ReadNonEmpty("Search products by name (ABC) or product number (200-500): ", "Search can't be empty.");
+            manager.SearchProducts(products, productNameOrNumber);
             break;
         case 4:
             string productName = userInput.ReadNonEmpty("Product to delete: ", "Product name can't be empty.");

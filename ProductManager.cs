@@ -11,10 +11,10 @@ namespace ProductListManager
     {
         ConsoleInput userInput = new ConsoleInput();
 
-        public List<string> AddProducts()
+        public List<string> AddProducts(List<string> products)
         {
             //Console.WriteLine("Enter product names. \nType 'exit' to finish.\n");
-            List<string> products = new List<string>();
+            
             while (true)
 
             {
@@ -121,6 +121,28 @@ namespace ProductListManager
                 Console.WriteLine($"WARNING: Product {productName} was not found.");
                 Console.ResetColor();
             }
+        }
+
+        public List<string> SearchProducts(List<string> products, string productName) 
+        {
+            List<string> found = products
+            .Where(p => p.Contains(productName, StringComparison.OrdinalIgnoreCase)) // Case-insensitive search by partial product name using LINQ 
+            .ToList();
+
+            if (found.Count == 0)
+            {
+                Console.WriteLine("No products found.");
+            }
+            else
+            {
+                Console.WriteLine("\nResults: \n");
+                foreach (string p in found)
+                {
+                    Console.WriteLine(p);
+                }
+            }
+
+            return found;
         }
       
     }

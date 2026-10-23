@@ -1,6 +1,7 @@
 ﻿
 
 List<string> userProducts = AddProducts();
+userProducts.Sort();//Sort the product list alphabetically before displaying it.
 foreach (string product in userProducts)
 {
     Console.WriteLine($"- {product}");
@@ -13,16 +14,9 @@ List<string> AddProducts()
     while (true)
 
     {
-        //Console.ResetColor();
         Console.Write("Product: ");
-        string userInput = Console.ReadLine().Trim();
-
-
-        if (userInput.ToLower() == "exit")
-        {
-            Console.WriteLine($"\nProducts entered: \n");
-            break;
-        }
+        // If ReadLine() returns null, use "" instead; otherwise trim leading and trailing spaces.
+        string userInput = Console.ReadLine()?.Trim() ?? ""; 
 
         if (string.IsNullOrWhiteSpace(userInput))
         {
@@ -30,6 +24,12 @@ List<string> AddProducts()
             Console.WriteLine($"Products name can't be empty");
             Console.ResetColor();
             continue;
+        }
+
+        if (userInput.ToLower() == "exit")
+        {
+            Console.WriteLine($"\nProducts entered: \n");
+            break;
         }
         
         products.Add(userInput);

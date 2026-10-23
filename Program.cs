@@ -10,7 +10,7 @@ while (runMenu)
 { 
 
 //Ask user to choose menu option 
-Console.WriteLine("\nSelect option 1-5. Type 0 to exit:\r\n\n1. Add Product\r\n2. View Products\r\n3. Search Product\r\n4. Delete Product\r\n5. Save products to the file\r\n0. Exit");
+Console.WriteLine("\nSelect option 1-5. Type 0 to exit:\r\n\n1. Add Product\r\n2. View Products\r\n3. Search Product\r\n4. Delete Product\r\n5. Show statistics\r\n0. Exit");
 string input = userInput.ReadNonEmpty("Select option: ", "Menu option can't be empty.");
 
 // Without this check, any non-number (e.g. "abc") would become 0 and close the program.
@@ -43,7 +43,8 @@ if (!int.TryParse(input, out int option))
             manager.DeleteProduct(products, productName);
             break;
         case 5:
-            Console.WriteLine($"Save products to the file");
+            Console.WriteLine($"\nShow statistics: \n");
+            manager.ShowStatistics(products);
             break;
         case 0:
             Console.WriteLine("Application closed.");

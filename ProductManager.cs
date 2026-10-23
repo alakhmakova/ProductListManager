@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProductListManager
 {
@@ -144,7 +145,28 @@ namespace ProductListManager
 
             return found;
         }
-      
+
+        
+        public void ShowStatistics(List<string> products)
+        {
+            if (products.Count > 0)
+            {
+                Console.WriteLine("\nStatistics: \n");
+                Console.WriteLine($"- Total products: {products.Count}");
+            } else {
+                Console.WriteLine("Your list is empty");
+                return;
+            }
+
+            List<int> numbers = products
+                .Select(p => int.Parse(p.Split('-')[1])) // Take the number after the dash: "CE-400" → 400
+                .ToList();
+
+            Console.WriteLine($"- Highest product number: {numbers.Max()}");
+            Console.WriteLine($"- Lowest product number: {numbers.Min()}");
+            Console.WriteLine($"- Average product number: {numbers.Average():F1}"); // F1 = round to 1 decimal place: 366.666 → 366.7
+        }
+
     }
 
     
